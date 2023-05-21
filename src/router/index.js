@@ -16,8 +16,38 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/LoginView.vue')
     }
   ]
 })
+
+/** 路由白名单 */
+// const whiteList = ["/login", "/register", "/home"];
+
+router.beforeEach((to, from, next) => {
+  console.log(to, from);
+  // 路由守卫
+  if(!to.matched.length){
+    console.log("出错啦");
+  } else {
+    const token = localStorage.getItem("token")
+    const routeName = to.name
+    console.log(routeName);
+    if(routeName) {
+      if(token) {
+        next()
+      }else{
+        router.push('/login')
+      }
+    }
+  }
+});
 
 export default router
